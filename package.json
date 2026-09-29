@@ -1,0 +1,20 @@
+{
+  "name": "nodejs-express-chat-app",
+  "version": "1.0.0",
+  "description": "Basic Express, MongoDB and Socket.io chat application with Mocha and Chai tests",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "mocha"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "mongoose": "^8.18.0",
+    "socket.io": "^4.8.1"
+  },
+  "devDependencies": {
+    "chai": "^6.0.1",
+    "mocha": "^11.7.2",
+    "supertest": "^7.1.4"
+  }
+}

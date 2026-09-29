@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Real-Time Chat</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 700px; margin: 40px auto; padding: 20px; background: #f4f4f4; }
+    .box { background: white; padding: 20px; border-radius: 12px; }
+    #messages { height: 350px; overflow-y: auto; border: 1px solid #ddd; padding: 10px; margin: 15px 0; }
+    .msg { padding: 8px; border-bottom: 1px solid #eee; }
+    input, button { padding: 10px; margin: 4px 0; }
+    input { width: 40%; }
+    button { cursor: pointer; }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h1>Real-Time Chat</h1>
+    <input id="username" placeholder="Username">
+    <div id="messages"></div>
+    <input id="message" placeholder="Type a message">
+    <button id="send">Send</button>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+    const messages = document.getElementById("messages");
+
+    function addMessage(data) {
+      const div = document.createElement("div");
+      div.className = "msg";
+      div.textContent = `${data.username}: ${data.message}`;
+      messages.appendChild(div);
+      messages.scrollTop = messages.scrollHeight;
+    }
+
+    fetch("/api/messages")
+      .then(res => res.json())
+      .then(data => data.forEach(addMessage));
+
+    socket.on("chat message", addMessage);
+
+    document.getElementById("send").addEventListener("click", () => {
+      const username = document.getElementById("username").value.trim();
+      const message = document.getElementById("message").value.trim();
+
+      if (!username || !message) return;
+
+      socket.emit("chat message", { username, message });
+      document.getElementById("message").value = "";
+    });
+  </script>
+</body>
+</html>
